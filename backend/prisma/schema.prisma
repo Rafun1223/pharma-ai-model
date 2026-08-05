@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Medicine {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  brandName    String
+  composition  String
+  manufacturer String?
+  price        Float
+  packSize     String?
+  dosageForm   String?
+  usage        String?
+  sideEffects  String[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([composition])
+}
+
+model Doctor {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  specialty       String
+  clinicName      String?
+  city            String
+  experienceYears Int?
+  consultationFee Float?
+  avgRating       Float    @default(0)
+  totalReviews    Int      @default(0)
+  reviews         Review[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([specialty, city])
+}
+
+model Review {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  doctorId    String   @db.ObjectId
+  doctor      Doctor   @relation(fields: [doctorId], references: [id])
+  patientName String
+  rating      Int
+  comment     String?
+  createdAt   DateTime @default(now())
+}

@@ -1,6 +1,5 @@
-import mongoose from "mongoose";
 import dotenv from "dotenv";
-import Medicine from "./models/Medicine.js";
+import prisma from "./config/db.js";
 
 dotenv.config();
 
@@ -99,14 +98,13 @@ const medicines = [
 
 const seedDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    await Medicine.deleteMany({});
-    await Medicine.insertMany(medicines);
-    console.log("Seeded successfully!");
+    await prisma.medicine.deleteMany({});
+    await prisma.medicine.createMany({ data: medicines });
+    console.log("Medicines seeded successfully!");
   } catch (err) {
     console.error("Seeding failed:", err.message);
   } finally {
-    process.exit();
+    await prisma.$disconnect();
   }
 };
 

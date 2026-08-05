@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import MedicineDetails from "./pages/MedicineDetails";
 import ScanPrescription from "./pages/ScanPrescription";
+import DoctorSearch from "./pages/DoctorSearch";
+import DoctorDetails from "./pages/DoctorDetails";
 import Navbar from "./components/Navbar";
 
 function App() {
@@ -13,6 +15,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/medicine/:name" element={<MedicineDetails />} />
           <Route path="/scan" element={<ScanPrescription />} />
+          <Route path="/doctors" element={<DoctorSearch />} />
+          <Route path="/doctors/:id" element={<DoctorDetails />} />
         </Routes>
       </div>
     </BrowserRouter>

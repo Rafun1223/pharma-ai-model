@@ -1,9 +1,11 @@
-import Medicine from "../models/Medicine.js";
+import prisma from "../config/db.js";
 
 export const getMedicineByName = async (req, res) => {
   try {
-    const med = await Medicine.findOne({
-      brandName: { $regex: req.params.name, $options: "i" },
+    const med = await prisma.medicine.findFirst({
+      where: {
+        brandName: { contains: req.params.name, mode: "insensitive" },
+      },
     });
     if (!med) return res.status(404).json({ message: "Medicine not found" });
     res.json(med);
@@ -14,15 +16,20 @@ export const getMedicineByName = async (req, res) => {
 
 export const getAlternatives = async (req, res) => {
   try {
-    const med = await Medicine.findOne({
-      brandName: { $regex: req.params.name, $options: "i" },
+    const med = await prisma.medicine.findFirst({
+      where: {
+        brandName: { contains: req.params.name, mode: "insensitive" },
+      },
     });
     if (!med) return res.status(404).json({ message: "Medicine not found" });
 
-    const alternatives = await Medicine.find({
-      composition: med.composition,
-      _id: { $ne: med._id },
-    }).sort({ price: 1 });
+    const alternatives = await prisma.medicine.findMany({
+      where: {
+        composition: med.composition,
+        id: { not: med.id },
+      },
+      orderBy: { price: "asc" },
+    });
 
     res.json({ original: med, alternatives });
   } catch (err) {

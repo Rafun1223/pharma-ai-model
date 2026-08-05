@@ -10,6 +10,9 @@ function Navbar() {
         <Link to="/" className="hover:underline">
           Search
         </Link>
+        <Link to="/doctors" className="hover:underline">
+          Find Doctors
+        </Link>
         <Link to="/scan" className="hover:underline">
           Scan Prescription
         </Link>
