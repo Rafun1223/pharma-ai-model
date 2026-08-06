@@ -78,8 +78,8 @@ function DoctorSearch() {
         <div className="space-y-3">
           {doctors.map((doc) => (
             <div
-              key={doc._id}
-              onClick={() => navigate(`/doctors/${doc._id}`)}
+              key={doc.id}
+              onClick={() => navigate(`/doctors/${doc.id}`)}
               className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm cursor-pointer hover:border-blue-400 transition"
             >
               <div className="flex justify-between items-start">

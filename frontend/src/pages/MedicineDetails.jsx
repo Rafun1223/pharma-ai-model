@@ -96,7 +96,7 @@ function MedicineDetails() {
         <div className="space-y-3">
           {alternatives.map((alt) => (
             <div
-              key={alt._id}
+              key={alt.id}
               className="flex justify-between items-center bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
             >
               <div>

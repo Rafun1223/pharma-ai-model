@@ -24,20 +24,37 @@ model Medicine {
 }
 
 model Doctor {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
   name            String
   specialty       String
   clinicName      String?
   city            String
   experienceYears Int?
   consultationFee Float?
-  avgRating       Float    @default(0)
-  totalReviews    Int      @default(0)
+  avgRating       Float         @default(0)
+  totalReviews    Int           @default(0)
+  assistant       Assistant?
+
+  // Availability
+  availableDays   String[]      // e.g. ["Mon","Tue","Wed","Thu","Fri"]
+  startTime       String        // e.g. "10:00" (24hr format)
+  endTime         String        // e.g. "14:00"
+  slotDurationMin Int           @default(20) // 15-30 min per patient
+
   reviews         Review[]
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  appointments    Appointment[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 
   @@index([specialty, city])
+}
+model Assistant {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  doctorId  String   @db.ObjectId @unique
+  doctor    Doctor   @relation(fields: [doctorId], references: [id])
+  name      String
+  phone     String?
+  createdAt DateTime @default(now())
 }
 
 model Review {
@@ -48,4 +65,18 @@ model Review {
   rating      Int
   comment     String?
   createdAt   DateTime @default(now())
+}
+model Appointment {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  doctorId      String   @db.ObjectId
+  doctor        Doctor   @relation(fields: [doctorId], references: [id])
+  patientName   String
+  patientPhone  String
+  appointmentDate DateTime  // the specific date (day only matters)
+  slotStart     String      // e.g. "10:20"
+  slotEnd       String      // e.g. "10:40"
+  status        String   @default("pending") // pending, confirmed, cancelled
+  createdAt     DateTime @default(now())
+
+  @@index([doctorId, appointmentDate])
 }
